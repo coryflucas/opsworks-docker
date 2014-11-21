@@ -1,7 +1,7 @@
 include_recipe 'deploy'
 
 node[:deploy].each do |application, deploy|
-  
+
   if node[:opsworks][:instance][:layers].first != deploy[:environment_variables][:layer]
     Chef::Log.debug("Skipping deploy::docker application #{application} as it is not deployed to this layer")
     next
@@ -21,15 +21,15 @@ node[:deploy].each do |application, deploy|
   bash "docker-cleanup" do
     user "root"
     code <<-EOH
-      if docker ps | grep #{deploy[:application]}; 
+      if docker ps | grep #{deploy[:application]};
       then
         docker stop #{deploy[:application]}
         sleep 3
-        docker rm #{deploy[:application]}
+        docker rm -f #{deploy[:application]}
       fi
-      if docker images | grep #{deploy[:application]}; 
+      if docker images | grep #{deploy[:application]};
       then
-        docker rmi #{deploy[:application]}
+        docker rmi -f #{deploy[:application]}
       fi
     EOH
   end
@@ -41,12 +41,12 @@ node[:deploy].each do |application, deploy|
      docker build -t=#{deploy[:application]} . > #{deploy[:application]}-docker.out
     EOH
   end
-  
+
   dockerenvs = " "
   deploy[:environment_variables].each do |key, value|
     dockerenvs=dockerenvs+" -e "+key+"="+value
   end
-  
+
   bash "docker-run" do
     user "root"
     cwd "#{deploy[:deploy_to]}/current"
