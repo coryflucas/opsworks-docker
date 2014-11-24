@@ -1,12 +1,12 @@
 include_recipe 'deploy'
 include_recipe 'docker'
 
-Chef::Log.debug("Entering docker-image-deploy")
+Chef::Log.info("Entering docker-image-deploy")
 
 node[:deploy].each do |application, deploy|
 
   if node[:opsworks][:instance][:layers].first != deploy[:environment_variables][:layer]
-    Chef::Log.debug("Skipping deploy::docker application #{application} as it is not deployed to this layer")
+    Chef::Log.warn("Skipping deploy::docker application #{application} as it is not deployed to this layer")
     next
   end
 
@@ -21,7 +21,7 @@ node[:deploy].each do |application, deploy|
     app application
   end
 
-  Chef::Log.debug('Docker cleanup')
+  Chef::Log.info('Docker cleanup')
   bash "docker-cleanup" do
     user "root"
     code <<-EOH
@@ -35,14 +35,14 @@ node[:deploy].each do |application, deploy|
     EOH
   end
 
-  Chef::Log.debug('REGISTRY: Login as #{deploy[:environment_variables][:registry_username]} to #{deploy[:environment_variables][:registry_url]')
+  Chef::Log.info('REGISTRY: Login as #{deploy[:environment_variables][:registry_username]} to #{deploy[:environment_variables][:registry_url]')
   docker_registry '#{deploy[:environment_variables][:registry_url]}' do
     username '#{deploy[:environment_variables][:registry_username]}'
     password '#{deploy[:environment_variables][:registry_password]}'
   end
 
   # Pull tagged image
-  Chef::Log.debug('IMAGE: Pulling #{deploy[:environment_variables][:registry_image]}:#{deploy[:environment_variables][:registry_tag]}')
+  Chef::Log.info('IMAGE: Pulling #{deploy[:environment_variables][:registry_image]}:#{deploy[:environment_variables][:registry_tag]}')
   docker_image '#{deploy[:environment_variables][:registry_image]}' do
     tag '#{deploy[:environment_variables][:registry_tag]}'
   end
@@ -51,9 +51,9 @@ node[:deploy].each do |application, deploy|
   deploy[:environment_variables].each do |key, value|
     dockerenvs=dockerenvs+" -e "+key+"="+value
   end
-  Chef::Log.debug('ENVs: #{dockerenvs}')
+  Chef::Log.info('ENVs: #{dockerenvs}')
 
-  Chef::Log.debug('docker-run start')
+  Chef::Log.info('docker-run start')
   bash "docker-run" do
     user "root"
     cwd "#{deploy[:deploy_to]}/current"
@@ -61,7 +61,7 @@ node[:deploy].each do |application, deploy|
       docker run #{dockerenvs} -p #{node[:opsworks][:instance][:private_ip]}:#{deploy[:environment_variables][:service_port]}:#{deploy[:environment_variables][:container_port]} --name #{deploy[:application]} -d grep #{deploy[:environment_variables][:registry_image]}:#{deploy[:environment_variables][:registry_tag]}
     EOH
   end
-  Chef::Log.debug('docker-run stop')
+  Chef::Log.info('docker-run stop')
 end
-Chef::Log.debug("Exiting docker-image-deploy")
+Chef::Log.info("Exiting docker-image-deploy")
 
