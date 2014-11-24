@@ -31,6 +31,7 @@ node[:deploy].each do |application, deploy|
         docker stop #{deploy[:application]}
         sleep 3
         docker rm -f #{deploy[:application]}
+      fi
       if docker ps -a | grep #{deploy[:application]};
       then
         docker rm -f #{deploy[:application]}
