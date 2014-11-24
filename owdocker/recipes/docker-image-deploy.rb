@@ -62,7 +62,6 @@ node[:deploy].each do |application, deploy|
   Chef::Log.info('docker-run start')
   bash "docker-run" do
     user "root"
-    cwd "#{deploy[:deploy_to]}/current"
     code <<-EOH
       docker run #{dockerenvs} -p #{node[:opsworks][:instance][:private_ip]}:#{deploy[:environment_variables][:service_port]}:#{deploy[:environment_variables][:container_port]} --name #{deploy[:application]} -d #{deploy[:environment_variables][:registry_image]}:#{deploy[:environment_variables][:registry_tag]}
     EOH
