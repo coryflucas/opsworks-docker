@@ -42,6 +42,7 @@ node[:deploy].each do |application, deploy|
   docker_registry "#{deploy[:environment_variables][:registry_url]}" do
     username deploy[:environment_variables][:registry_username]
     password deploy[:environment_variables][:registry_password]
+    email deploy[:environment_variables][:registry_username]}
   end
 
   # Pull tagged image
