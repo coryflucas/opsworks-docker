@@ -38,23 +38,23 @@ node[:deploy].each do |application, deploy|
     EOH
   end
 
-  Chef::Log.info('REGISTRY: Login as #{deploy[:environment_variables][:registry_username]} to #{deploy[:environment_variables][:registry_url]')
-  docker_registry '#{deploy[:environment_variables][:registry_url]}' do
-    username '#{deploy[:environment_variables][:registry_username]}'
-    password '#{deploy[:environment_variables][:registry_password]}'
+  Chef::Log.info("REGISTRY: Login as #{deploy[:environment_variables][:registry_username]} to #{deploy[:environment_variables][:registry_url]}")
+  docker_registry "#{deploy[:environment_variables][:registry_url]}" do
+    username deploy[:environment_variables][:registry_username]
+    password deploy[:environment_variables][:registry_password]
   end
 
   # Pull tagged image
-  Chef::Log.info('IMAGE: Pulling #{deploy[:environment_variables][:registry_image]}:#{deploy[:environment_variables][:registry_tag]}')
-  docker_image '#{deploy[:environment_variables][:registry_image]}' do
-    tag '#{deploy[:environment_variables][:registry_tag]}'
+  Chef::Log.info("IMAGE: Pulling #{deploy[:environment_variables][:registry_image]}:#{deploy[:environment_variables][:registry_tag]}")
+  docker_image "#{deploy[:environment_variables][:registry_image]}" do
+    tag deploy[:environment_variables][:registry_tag]
   end
 
   dockerenvs = " "
   deploy[:environment_variables].each do |key, value|
     dockerenvs=dockerenvs+" -e "+key+"="+value
   end
-  Chef::Log.info('ENVs: #{dockerenvs}')
+  Chef::Log.info("ENVs: #{dockerenvs}")
 
   Chef::Log.info('docker-run start')
   bash "docker-run" do
