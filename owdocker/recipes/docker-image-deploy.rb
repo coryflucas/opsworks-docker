@@ -55,7 +55,7 @@ node[:deploy].each do |application, deploy|
 
   dockerenvs = " "
   deploy[:environment_variables].each do |key, value|
-    dockerenvs=dockerenvs+" -e "+key+"="+value
+    dockerenvs=dockerenvs+" -e "+key+"="+value unless key == "registry_password"
   end
   Chef::Log.info("ENVs: #{dockerenvs}")
 
