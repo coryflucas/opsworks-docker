@@ -24,6 +24,7 @@ node[:deploy].each do |application, deploy|
   Chef::Log.info('Docker cleanup')
   bash "docker-cleanup" do
     user "root"
+    returns [0, 1]
     code <<-EOH
       if docker ps | grep #{deploy[:application]};
       then
