@@ -31,7 +31,10 @@ node[:deploy].each do |application, deploy|
         sleep 3
         docker rm -f #{deploy[:application]}
       fi
-      docker rmi -f #{deploy[:environment_variables][:registry_image]}:#{deploy[:environment_variables][:registry_tag]}
+      if docker images | grep #{deploy[:environment_variables][:registry_image]};
+      then
+        docker rmi -f $(docker images | grep #{deploy[:environment_variables][:registry_image]} | awk {'print $3'})
+      fi
     EOH
   end
 
