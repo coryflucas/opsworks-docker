@@ -39,16 +39,10 @@ node[:deploy].each do |application, deploy|
   end
 
   Chef::Log.info("REGISTRY: Login as #{deploy[:environment_variables][:registry_username]} to #{deploy[:environment_variables][:registry_url]}")
-
-  bash "docker_registry" do
-    email = deploy[:environment_variables][:registry_email]
-    username = deploy[:environment_variables][:registry_username]
-    password = deploy[:environment_variables][:registry_password]
-    registry_url = deploy[:environment_variables][:registry_url]
-    user "root"
-    code <<-EOH
-      docker login -e="#{email}" -u="#{username}" -p="#{password}" #{registry_url}
-    EOH
+  docker_registry "#{deploy[:environment_variables][:registry_url]}" do
+    username deploy[:environment_variables][:registry_username]
+    password deploy[:environment_variables][:registry_password]
+    email deploy[:environment_variables][:registry_username]
   end
 
   # Pull tagged image
