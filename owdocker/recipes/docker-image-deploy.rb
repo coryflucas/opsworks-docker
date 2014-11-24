@@ -42,7 +42,7 @@ node[:deploy].each do |application, deploy|
   docker_registry "#{deploy[:environment_variables][:registry_url]}" do
     username deploy[:environment_variables][:registry_username]
     password deploy[:environment_variables][:registry_password]
-    email deploy[:environment_variables][:registry_username]}
+    email deploy[:environment_variables][:registry_username]
   end
 
   # Pull tagged image
@@ -62,10 +62,9 @@ node[:deploy].each do |application, deploy|
     user "root"
     cwd "#{deploy[:deploy_to]}/current"
     code <<-EOH
-      docker run #{dockerenvs} -p #{node[:opsworks][:instance][:private_ip]}:#{deploy[:environment_variables][:service_port]}:#{deploy[:environment_variables][:container_port]} --name #{deploy[:application]} -d grep #{deploy[:environment_variables][:registry_image]}:#{deploy[:environment_variables][:registry_tag]}
+      docker run #{dockerenvs} -p #{node[:opsworks][:instance][:private_ip]}:#{deploy[:environment_variables][:service_port]}:#{deploy[:environment_variables][:container_port]} --name #{deploy[:application]} -d #{deploy[:environment_variables][:registry_image]}:#{deploy[:environment_variables][:registry_tag]}
     EOH
   end
   Chef::Log.info('docker-run stop')
 end
 Chef::Log.info("Exiting docker-image-deploy")
-
