@@ -22,6 +22,7 @@ Instructions
     * Repository type: Other
     * Environment variables:
         * registry_image: The path portion of a docker pull command ala: docker pull {{ registry image }}
+        * registry_tag: The tag of the image that should be pulled from the registry
         * layer: The shortname of the layer the image should be deployed to
         * service_port: The port on the HOST that will be connected to the container
         * container_port: The port on the CONTAINER that will be connected to the service port
