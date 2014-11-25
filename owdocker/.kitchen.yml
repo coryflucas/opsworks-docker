@@ -11,5 +11,5 @@ platforms:
 suites:
   - name: default
     run_list:
-      - recipe[docker::install]
+      - recipe[owdocker::install]
     attributes:
