@@ -64,7 +64,7 @@ node[:deploy].each do |application, deploy|
   end
   Chef::Log.info("ENVs: #{dockerenvs}")
 
-  hostname = "#{node[:opsworks][:stack][:name]-node[:opsworks][:instance][:hostname]}"
+  hostname = "#{node[:opsworks][:stack][:name]}-#{node[:opsworks][:instance][:hostname]}"
   Chef::Log.info("hostname: #{hostname}")
 
   Chef::Log.info('docker-run start')
