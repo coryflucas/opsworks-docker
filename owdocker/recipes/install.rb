@@ -9,16 +9,11 @@ apt_repository "docker" do
   key "36A1D7869245C8950F966E92D8576A8BA88D21E9"
 end
 
-execute "apt-get update" do
-  user "root"
-end
-
 # Install Docker latest version
 package "docker" do
   package_name "lxc-docker"
   action :install
 end
-
 
 service "docker" do
   action :start
