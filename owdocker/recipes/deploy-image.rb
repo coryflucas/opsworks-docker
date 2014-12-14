@@ -29,7 +29,7 @@ node[:deploy].each do |application, deploy|
       port deploy[:environment_variables][:ports].split(";")
     end
     if deploy[:environment_variables][:links]
-      link deploy[:environment_variables][:links]
+      link deploy[:environment_variables][:links].split(";")
     end
     action :redeploy
   end
