@@ -29,7 +29,6 @@ node[:deploy].each do |application, deploy|
   image_name = nil
 
   if deploy[:environment_variables][:registry_image]
-    image_name = deploy[:environment_variables][:registry_image]
     docker_image image_name do
       tag deploy[:environment_variables][:registry_tag]
     end
@@ -37,17 +36,13 @@ node[:deploy].each do |application, deploy|
 
   if deploy[:environment_variables][:image_archive_name]
     current_dir = ::File.join(deploy[:deploy_to], 'current')
-    image_name = ::File.basename(deploy[:environment_variables][:image_archive_name], ".*")
     docker_image image_name do
       input ::File.join(current_dir, deploy[:environment_variables][:image_archive_name])
       action :load
     end
   end
 
-  Chef::Application.fatal!("Unable to determine image name, set either registry_image or image_archive_name") if !image_name
-
-  docker_container "#{application}" do
-    image image_name
+  docker_container deploy[:environment_variables][:image_name] do
     detach true
     hostname "#{node[:opsworks][:stack][:name]}-#{node[:opsworks][:instance][:hostname]}"
     env deploy[:environment_variables].map { |k,v| "#{k}=#{v}" if !k.match(/registry_password/)}.compact
