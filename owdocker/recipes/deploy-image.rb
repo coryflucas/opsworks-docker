@@ -1,11 +1,21 @@
+include_recipe 'deploy'
 include_recipe 'docker'
-include_recipe 'apt'
-package 'apt-transport-https'
 
 node[:deploy].each do |application, deploy|
   if node[:opsworks][:instance][:layers].first != deploy[:environment_variables][:layer]
     Chef::Log.warn("Skipping deploy::docker application #{application} as it is not deployed to this layer")
     next
+  end
+
+  opsworks_deploy_dir do
+      user deploy[:user]
+      group deploy[:group]
+      path deploy[:deploy_to]
+  end
+
+  opsworks_deploy do
+      deploy_data deploy
+      app application
   end
 
   if deploy[:environment_variables][:registry_username]
