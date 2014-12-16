@@ -44,7 +44,7 @@ node[:deploy].each do |application, deploy|
     end
   end
 
-  Chef::Application.fatal!("Unable to determine image name, set either registry_image or image_archive_name") if !image
+  Chef::Application.fatal!("Unable to determine image name, set either registry_image or image_archive_name") if !image_name
 
   docker_container "#{application}" do
     image image_name
