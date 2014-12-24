@@ -1,0 +1,23 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_solo
+
+platforms:
+  - name: ubuntu-12.04
+
+suites:
+  - name: default
+    run_list:
+      - recipe[logs::install]
+    attributes:
+      opsworks:
+        applications:
+        - name: Test1
+          slug_name: test1
+        - name: Test2
+          slug_name: test2
+        instance:
+          hostname: testhost
