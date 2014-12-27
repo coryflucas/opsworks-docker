@@ -54,6 +54,9 @@ node[:deploy].each do |application, deploy|
     if deploy[:environment_variables][:links]
       link deploy[:environment_variables][:links].split(";")
     end
+    if deploy[:environment_variables][:volumes]
+        volume deploy[:environment_variables][:volumes].split(";")
+    end
     action :redeploy
   end
 end
