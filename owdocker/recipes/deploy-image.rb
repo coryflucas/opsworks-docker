@@ -45,7 +45,7 @@ node[:deploy].each do |application, deploy|
 
   docker_container deploy[:environment_variables][:image_name] do
     detach true
-    hostname "#{node[:opsworks][:stack][:name]}-#{node[:opsworks][:instance][:hostname]}"
+    hostname "#{node[:opsworks][:instance][:hostname]}-#{application}"
     env deploy[:environment_variables].map { |k,v| "#{k}=#{v}" if !k.match(/registry_password/)}.compact
     container_name application
     if deploy[:environment_variables][:ports]
