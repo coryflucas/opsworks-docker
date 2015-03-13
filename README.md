@@ -30,3 +30,4 @@ Instructions
         * registry_url: OPTIONAL url to a non hub.docker ala quay.io
         * registry_username: OPTIONAL username to login to the registry
         * registry_password: OPTIONAL password to login to the registry
+        * registry_email: OPTIONAL email to login to the registry
