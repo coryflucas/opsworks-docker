@@ -26,6 +26,8 @@ Instructions
         * layer: The shortname of the layer the image should be deployed to
         * service_port: The port on the HOST that will be connected to the container
         * container_port: The port on the CONTAINER that will be connected to the service port
+        * volumes: OPTIONAL argument to be passed as -v options (e.g. "/src/webapp:/opt/webapp")
         * registry_url: OPTIONAL url to a non hub.docker ala quay.io
         * registry_username: OPTIONAL username to login to the registry
         * registry_password: OPTIONAL password to login to the registry
+        * registry_email: OPTIONAL email to login to the registry
